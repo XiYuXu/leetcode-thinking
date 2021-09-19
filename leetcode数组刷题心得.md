@@ -276,10 +276,9 @@ class Solution {
               //执行到这里说明原数格式为999的模式
               digits = new int[digits.length+1];  //产生类似1000
               digits[0] = 1;						//把第一位置为0即可描述999+1
-              
-              
+             	return digits;     
           }
-  	}
+  }
   ```
   
   
