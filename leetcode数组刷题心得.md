@@ -217,4 +217,71 @@ class Solution {
 
 ##### 预备知识
 
-* 
+
+
+
+
+
+
+#### [面试题 01.09. 字符串轮转](https://leetcode.cn/problems/string-rotation-lcci/)
+
+> 今天碰到的一个比较搞的题，因为是旋转字符串嘛，自然想到根据取模来逐个字符判断是不是一样的。于是有了下面这个算法，通过不断地寻找s1字符串第一个字符出现的位置，然后通过取模运算不断地对比相应位置是否相等，若比到第length个字符当然就返回true了，否则一直找到没有s1[0]开头了就返回false了。
+
+```C
+bool isFlipedString(char* s1, char* s2){
+    int length = strlen(s1);
+    if(length!=strlen(s2)){
+        return false;
+    }else if(length==0){
+        return true;
+    }
+    int index = 0;
+    char *p = NULL;
+    char *temp = s2;
+    p = strchr(temp,s1[0]);
+    int i;
+    while(p!=NULL){
+        for(i=1;i<length;i++){
+            //printf("si=%c index=%d s2[*]=%c\n",s1[i],(int)(p-s2+i),s2[((p-s2+i)%length)]);
+            if(s1[i]  != s2[((p-s2+i)%length)]){
+                p = strchr(p+1,s1[0]);
+                i=0;
+                break;
+            }
+            continue;
+        }
+        if(i==length){
+            return true;
+        }
+    }
+    return false;
+}
+```
+
+> 但是显然有更好的办法，比如如果两个字符串是旋转来的，那么s2+s2肯定是在中间构造出了一个新的s1
+>
+> 比如 s2是s1在第i个位置翻转来的，s1 = {ch0,ch1 .....chi...chn},那么s2={chi...chn,ch0,...chi-1},所以s2+s2就构造了（chi...chn,**ch0...chi-1..chi...chn**,ch0,...chi-1）,中间这一段就是s1啦。
+>
+> 所以最后的代码就转为（下面是说s1+s1包含s2，也是一样的）
+
+```C
+bool isFlipedString(char* s1, char* s2){
+
+    if (strlen(s1) != strlen(s2)) {
+        return false;
+    }
+    int len = strlen(s1);
+    int i = 0;
+    char* arr = (char*)malloc(sizeof(char) * len * 2 + 1);
+    for (; i < 2 * len; i++) {
+        arr[i] = s1[i % len];
+        //printf("%c ", arr[i]);
+    }
+    arr[i] =  '\0';
+    if (strstr(arr, s2) != NULL){
+        return true;
+    }
+
+    return false;
+}
+```
