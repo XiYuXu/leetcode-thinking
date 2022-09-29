@@ -215,10 +215,7 @@ class Solution {
 
 ### 36.判断当前九宫格中填入数据是否有效
 
-##### 预备知识
-
-
-
+##### 知识点
 
 
 
@@ -285,3 +282,67 @@ bool isFlipedString(char* s1, char* s2){
     return false;
 }
 ```
+* boolean初始化语句可以直接初始化
+
+  ```java
+  
+  class Solution {
+  	/*******
+  	*	思路：
+  	*	1.要保证每个输入数据都有效，则每一行、每一列、每个排列的3x3范围的数据最多出现一次
+  	*   2.由于值范围为0~9，因此将每一行、每一列、每个area，定义作为单个长度为9的数组，
+  	*   3.对九宫格进行遍历，用nums[i]==true表示值为i+1的数存在。
+  	*	4.每次遍历到的值先判断是否在该对应行、列、块的数组出现过，不断更新三个数组
+      */
+      public boolean isValidSudoku(char[][] board) {
+          boolean [][]row = new boolean[9][9];    //9个行数组
+          boolean [][]column = new boolean[9][9]; //9个列数组
+          boolean [][]area = new boolean[9][9];   //9个块数组
+          //遍历每一个值
+          for(int i=0;i<board.length;i++){
+              for(int j=0;j<board[i].length;j++){
+                  if(board[i][j]=='.')
+                      continue;
+                  //获取该值在0-8范围的下标
+                  int temp = board[i][j]-'1';
+                  //块序号
+                  int index = i/3*3+j/3;
+                  //若是存在对应行列块数组存在该值下标的真值，则返回false
+                  if(row[i][temp] || column[j][temp] || area[index][temp]){
+                      return false;
+                  }else{
+                      row[i][temp] = true;
+                      column[j][temp] = true;
+                      area[index][temp] = true;
+                  }
+              }
+          }
+          return true;
+      }
+  }
+  ```
+
+  ### 66.加一
+  
+  ```java
+  /************
+  *   思路：数组加一，意味着每一位如果不为9，则无进位
+  *        也即若加1不为10，则没有进位，也就可以结束循环
+  */  影响数组长度只有一种情况，9，99，999这些情况的证明为最后一位仍有进位
+      class Solution {
+          public int[] plusOne(int[] digits) {
+              for(int i=digits.length-1;i>=0;i--){
+  				digits[i]++;
+                  digits[i] = (digits[i])%10;
+                  if(digits[i]!=0){
+                      return digits;  //若没返回，说明不是999之类的情况
+                  }
+              }
+              //执行到这里说明原数格式为999的模式
+              digits = new int[digits.length+1];  //产生类似1000
+              digits[0] = 1;						//把第一位置为0即可描述999+1
+             	return digits;     
+          }
+  }
+  ```
+  
