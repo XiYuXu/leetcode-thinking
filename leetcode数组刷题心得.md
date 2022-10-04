@@ -346,3 +346,35 @@ bool isFlipedString(char* s1, char* s2){
   }
   ```
   
+
+
+
+#### [921. 使括号有效的最少添加](https://leetcode.cn/problems/minimum-add-to-make-parentheses-valid/)
+
+> 要保证组成有效的括号，这个题其实还蛮简单的，需要注意的是测试用例有“())”,还有“)(”这样子的。原来想着好像把左括号看成1，右括号为-1，最后算一下求和绝对值。
+>
+> 但是只能面对前面这样子的字符串。所以为了防止右边这样的用例（必须往左填充左括号，就是把前面累加完为0后，接着直接碰到右括号了），我们就要统计这样子的情况。
+>
+> 总而言之：这两个用例反映出的心法就是 正值可以被负值抵消，但是负值是不可被正值抵消的
+>
+> 于是有
+
+```C
+int minAddToMakeValid(char * s){
+    int tempSum = 0;       //保存临时计算和
+    int result = 0;        //用来保存最终结果，为（直接碰到的右括号数）以及累加的绝对值
+    for(int i=0;i<strlen(s);i++){
+        if(s[i]=='('){
+            tempSum++;
+        }else{
+            tempSum--;
+        }
+        //前面累加完为0后，直接碰到右括号了就把tempSum归0，并从该右括号后一个数开始遍历
+        if(tempSum<0){     
+            result++;
+            tempSum=0;
+        }
+    }
+    return result+tempSum;
+}
+```
